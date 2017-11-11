@@ -1,2 +1,2 @@
 bin_PROGRAMS = sha256test		
-tut_prog_SOURCES = sha256_test.c
+sha256test_SOURCES = sha256_test.c
