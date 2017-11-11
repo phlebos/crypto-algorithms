@@ -1,3 +1,9 @@
+Forked from https://github.com/B-Con/crypto-algorithms.git
+
+Written by Brad Conte (brad@bradconte.com)
+
+
+
 crypto-algorithms
 =================
 
