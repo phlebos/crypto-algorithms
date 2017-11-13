@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include <memory.h>
 #include <string.h>
-#include "sha256.h"
+#include "/home/lee/git/crypto-algorithms/sha256.h"
 
 /*********************** FUNCTION DEFINITIONS ***********************/
 int sha256_test()
@@ -34,10 +34,11 @@ int sha256_test()
 	int idx;
 	int pass = 1;
 
-	sha256_init(&ctx);
+/*	sha256_init(&ctx);
+/*	sha256_init(SHA256_CTX *ctx) 
 	sha256_update(&ctx, text1, strlen(text1));
 	sha256_final(&ctx, buf);
-	pass = pass && !memcmp(hash1, buf, SHA256_BLOCK_SIZE);
+	pass = pass && !memcmp(hash1, buf, SHA256_BLOCK_SIZE); */
 
 	sha256_init(&ctx);
 	sha256_update(&ctx, text2, strlen(text2));
