@@ -1,1 +1,14 @@
 /.project
+# ignore objects and archives, anywhere in the tree.
+*.[oa]
+/build-aux
+.deps
+.dirstamp
+/autom4te.cache
+Makefile
+stamp-h
+stamp-h1
+stamp-h.in
+config.h
+config.status
+config.h.in~
