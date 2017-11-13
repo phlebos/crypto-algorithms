@@ -1,2 +1,5 @@
-bin_PROGRAMS = sha256_test		
+bin_PROGRAMS = sha256_test hello			
 sha256_test_SOURCES = src/sha256_test.c src/sha256.c src/sha256.h
+hello_SOURCES = src/hello.c
+
+

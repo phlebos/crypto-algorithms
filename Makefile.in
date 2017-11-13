@@ -76,7 +76,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = sha256_test$(EXEEXT)
+bin_PROGRAMS = sha256_test$(EXEEXT) hello$(EXEEXT)
 subdir = .
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/configure $(am__configure_deps) \
@@ -97,6 +97,9 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
+am_hello_OBJECTS = hello.$(OBJEXT)
+hello_OBJECTS = $(am_hello_OBJECTS)
+hello_LDADD = $(LDADD)
 am_sha256_test_OBJECTS = sha256_test.$(OBJEXT) sha256.$(OBJEXT)
 sha256_test_OBJECTS = $(am_sha256_test_OBJECTS)
 sha256_test_LDADD = $(LDADD)
@@ -132,8 +135,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(sha256_test_SOURCES)
-DIST_SOURCES = $(sha256_test_SOURCES)
+SOURCES = $(hello_SOURCES) $(sha256_test_SOURCES)
+DIST_SOURCES = $(hello_SOURCES) $(sha256_test_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -263,6 +266,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 sha256_test_SOURCES = src/sha256_test.c src/sha256.c src/sha256.h
+hello_SOURCES = src/hello.c
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -360,6 +364,10 @@ uninstall-binPROGRAMS:
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 
+hello$(EXEEXT): $(hello_OBJECTS) $(hello_DEPENDENCIES) $(EXTRA_hello_DEPENDENCIES) 
+	@rm -f hello$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(hello_OBJECTS) $(hello_LDADD) $(LIBS)
+
 sha256_test$(EXEEXT): $(sha256_test_OBJECTS) $(sha256_test_DEPENDENCIES) $(EXTRA_sha256_test_DEPENDENCIES) 
 	@rm -f sha256_test$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(sha256_test_OBJECTS) $(sha256_test_LDADD) $(LIBS)
@@ -370,6 +378,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hello.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha256.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha256_test.Po@am__quote@
 
@@ -386,6 +395,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c `$(CYGPATH_W) '$<'`
+
+hello.o: src/hello.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT hello.o -MD -MP -MF $(DEPDIR)/hello.Tpo -c -o hello.o `test -f 'src/hello.c' || echo '$(srcdir)/'`src/hello.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/hello.Tpo $(DEPDIR)/hello.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/hello.c' object='hello.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o hello.o `test -f 'src/hello.c' || echo '$(srcdir)/'`src/hello.c
+
+hello.obj: src/hello.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT hello.obj -MD -MP -MF $(DEPDIR)/hello.Tpo -c -o hello.obj `if test -f 'src/hello.c'; then $(CYGPATH_W) 'src/hello.c'; else $(CYGPATH_W) '$(srcdir)/src/hello.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/hello.Tpo $(DEPDIR)/hello.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/hello.c' object='hello.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o hello.obj `if test -f 'src/hello.c'; then $(CYGPATH_W) 'src/hello.c'; else $(CYGPATH_W) '$(srcdir)/src/hello.c'; fi`
 
 sha256_test.o: src/sha256_test.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT sha256_test.o -MD -MP -MF $(DEPDIR)/sha256_test.Tpo -c -o sha256_test.o `test -f 'src/sha256_test.c' || echo '$(srcdir)/'`src/sha256_test.c

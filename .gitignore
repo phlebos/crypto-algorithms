@@ -1,5 +1,6 @@
 /.project
 sha256_test
+hello
 # ignore objects and archives, anywhere in the tree.
 *.[oa]
 /build-aux
@@ -11,5 +12,6 @@ stamp-h
 stamp-h1
 stamp-h.in
 config.h
+config.log
 config.status
 config.h.in~
