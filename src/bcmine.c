@@ -46,14 +46,19 @@ int hex2data(unsigned char *data, const unsigned char *hexstring, unsigned int l
 }
  
 struct bc_header bch;
-/*
-char s[] = "Hello";
-char* cp = s;
-for ( ; *cp != '\0'; ++cp )
+
+int printf_array_hex(uint8_t *array, int len)
 {
-   printf("%02x", *cp);
+	uint8_t * pos;
+
+	pos = array;
+
+	for ( ; pos != end; ++pos )
+	{
+   		printf("%02x", *pos);
+	}
 }
-*/
+
 
 int main()
 {
