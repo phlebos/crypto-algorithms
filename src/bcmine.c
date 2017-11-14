@@ -97,6 +97,7 @@ uint32_t Nonce;
 	int idx;
 	int pass = 1;
 	BYTE buf[SHA256_BLOCK_SIZE];
+	BYTE buf1[SHA256_BLOCK_SIZE];
 
 /* first hash */
 
@@ -111,11 +112,14 @@ uint32_t Nonce;
 /* second hash */
 
 	sha256_init(&ctx);
-	sha256_update(&ctx, bch.prev_blk_hash, sizeof(bch.prev_blk_hash));
-	sha256_final(&ctx, buf);
+	sha256_update(&ctx, buf, SHA256_BLOCK_SIZE);
+	sha256_final(&ctx, buf1);
 
 	printf("First hash = 0x");
 	printf_array_hex(buf, sizeof(buf));
+
+	printf("Second hash = 0x");
+	printf_array_hex(buf1, SHA256_BLOCK_SIZE);
 /*
 	sha256_init(&ctx);
 	for (idx = 0; idx < 100000; ++idx)
