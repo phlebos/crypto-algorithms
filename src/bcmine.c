@@ -101,7 +101,10 @@ uint32_t Nonce;
 	sha256_init(&ctx);
 	sha256_update(&ctx, bch.prev_blk_hash, sizeof(bch.prev_blk_hash));
 	sha256_final(&ctx, buf);
-	pass = pass && !memcmp(hash2, buf, SHA256_BLOCK_SIZE);
+/*	pass = pass && !memcmp(hash2, buf, SHA256_BLOCK_SIZE); */
+
+	printf("Hash = 0x");
+	printf_array_hex(buf, sizeof(buf));
 /*
 	sha256_init(&ctx);
 	for (idx = 0; idx < 100000; ++idx)
