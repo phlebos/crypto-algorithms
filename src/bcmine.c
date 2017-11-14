@@ -87,9 +87,33 @@ printf("prev_blk_hash = 0x");
 printf_array_hex(bch.prev_blk_hash, sizeof(bch.prev_blk_hash));
 printf("merkle_root_hash = 0x");
 printf_array_hex(bch.merkle_root_hash, sizeof(bch.merkle_root_hash));
+
+/* Now do some work */
+
+SHA256_CTX ctx;
+
+uint32_t Nonce;
+
+	int idx;
+	int pass = 1;
+	BYTE buf[SHA256_BLOCK_SIZE];
+
+	sha256_init(&ctx);
+	sha256_update(&ctx, bch.prev_blk_hash, sizeof(bch.prev_blk_hash));
+	sha256_final(&ctx, buf);
+	pass = pass && !memcmp(hash2, buf, SHA256_BLOCK_SIZE);
+/*
+	sha256_init(&ctx);
+	for (idx = 0; idx < 100000; ++idx)
+	   sha256_update(&ctx, text3, strlen(text3));
+	sha256_final(&ctx, buf);
+	pass = pass && !memcmp(hash3, buf, SHA256_BLOCK_SIZE);
+
+	return(pass);
+*/
 }
 
-
+ 
 /*
 
 ver = 2
