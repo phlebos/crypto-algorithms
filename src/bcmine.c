@@ -98,12 +98,23 @@ uint32_t Nonce;
 	int pass = 1;
 	BYTE buf[SHA256_BLOCK_SIZE];
 
+/* first hash */
+
 	sha256_init(&ctx);
 	sha256_update(&ctx, bch.prev_blk_hash, sizeof(bch.prev_blk_hash));
 	sha256_final(&ctx, buf);
 /*	pass = pass && !memcmp(hash2, buf, SHA256_BLOCK_SIZE); */
 
-	printf("Hash = 0x");
+/* first hash did something */
+/* Hash = 0x85c61645ab8939021923e650099648eb3871184855715d094611c65687772678 */
+
+/* second hash */
+
+	sha256_init(&ctx);
+	sha256_update(&ctx, bch.prev_blk_hash, sizeof(bch.prev_blk_hash));
+	sha256_final(&ctx, buf);
+
+	printf("First hash = 0x");
 	printf_array_hex(buf, sizeof(buf));
 /*
 	sha256_init(&ctx);
