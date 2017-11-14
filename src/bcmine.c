@@ -50,13 +50,16 @@ struct bc_header bch;
 int printf_array_hex(uint8_t *array, int len)
 {
 	uint8_t * pos;
-
+	uint8_t * end;	
 	pos = array;
+	end = pos + len;
 
 	for ( ; pos != end; ++pos )
 	{
    		printf("%02x", *pos);
 	}
+printf("\n");
+
 }
 
 
@@ -80,7 +83,10 @@ printf("Ver = %u \n", bch.nVer);
 printf("nTime = 0x%x \n", bch.nTime);
 printf("nBits = 0x%x \n", bch.nBits);
 printf("nNonce = 0x%x \n", bch.nNonce);
-
+printf("prev_blk_hash = 0x");
+printf_array_hex(bch.prev_blk_hash, sizeof(bch.prev_blk_hash));
+printf("merkle_root_hash = 0x");
+printf_array_hex(bch.merkle_root_hash, sizeof(bch.merkle_root_hash));
 }
 
 
