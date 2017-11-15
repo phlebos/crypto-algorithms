@@ -19,28 +19,49 @@ struct bc_header {
 //returns 0 on success, -1 on error
 //data is a buffer of at least len bytes
 //hexstring is upper or lower case hexadecimal, NOT prepended with "0x"
-int hex2data(unsigned char *data, const unsigned char *hexstring, unsigned int len)
+int hex2data(unsigned char *data, const unsigned char *hexstring, unsigned int len, int direction)
 {
     unsigned const char *pos = hexstring;
     char *endptr;
     size_t count = 0;
+    unsigned int limit;
 
     if ((hexstring[0] == '\0') || (strlen(hexstring) % 2)) {
         //hexstring contains no data
         //or hexstring has an odd length
         return -1;
     }
-
-    for(count = 0; count < len; count++) {
-        char buf[5] = {'0', 'x', pos[0], pos[1], 0};
-        data[count] = strtol(buf, &endptr, 0);
-        pos += 2 * sizeof(char);
-
-        if (endptr[0] != '\0') {
-            //non-hexadecimal character encountered
-            return -1;
-        }
-    }
+    limit = len/2;
+	if (direction == 0) /* forwards */ 
+	{
+	printf("going backwards len = %d \n",len);
+	    for(count = 0; count < limit; count++) {
+	        char buf[5] = {'0', 'x', pos[0], pos[1], 0};
+		printf("Count %d Store at %d \n",count, count); 
+	        data[count] = strtol(buf, &endptr, 0);
+	        pos += 2 * sizeof(char);
+	
+	        if (endptr[0] != '\0') {
+	            //non-hexadecimal character encountered
+	            return -1;
+        	}
+	     }
+	}
+	else /* backwards */
+	{
+	printf("going backwards len = %d \n",len);	    
+	     for(count = 0; count < limit; count++) {
+	        char buf[5] = {'0', 'x', pos[0], pos[1], 0};
+		printf("Count %d Store at %d \n",count, (limit - (count+1))); 
+	        data[(limit) - (count+1)] = strtol(buf, &endptr, 0);
+	        pos += 2 * sizeof(char);
+	
+	        if (endptr[0] != '\0') {
+	            //non-hexadecimal character encountered
+	            return -1;
+        	}
+	     }
+	}
 
     return 0;
 }
@@ -72,17 +93,17 @@ char mkl_root_hash[]="871714dcbae6c8193a2bb9b2a69fe1c0440399f38d94b3a0f1b447275a
 /*initialise block header */
 
 bch.nVer = 2;
-hex2data(bch.prev_blk_hash , p_blk_hash, strlen(p_blk_hash));
-hex2data(bch.merkle_root_hash , mkl_root_hash, strlen(mkl_root_hash));
+hex2data(bch.prev_blk_hash , p_blk_hash, strlen(p_blk_hash),1);
+hex2data(bch.merkle_root_hash , mkl_root_hash, strlen(mkl_root_hash),1);
 bch.nTime=0x53058b35;
 bch.nBits=0x19015f53;
-bch.nNonce=0;
-
+/* bch.nNonce=0; */
+bch.nNonce=856192328;
 /* print out for check */
 printf("Ver = %u \n", bch.nVer);
 printf("nTime = 0x%x \n", bch.nTime);
 printf("nBits = 0x%x \n", bch.nBits);
-printf("nNonce = 0x%x \n", bch.nNonce);
+printf("nNonce = %d \n", bch.nNonce);
 printf("prev_blk_hash = 0x");
 printf_array_hex(bch.prev_blk_hash, sizeof(bch.prev_blk_hash));
 printf("merkle_root_hash = 0x");
@@ -101,10 +122,15 @@ uint32_t Nonce;
 
 /* first hash */
 
+	printf_array_hex((uint8_t *)&bch, sizeof(bch));
+
 	sha256_init(&ctx);
-	sha256_update(&ctx, bch.prev_blk_hash, sizeof(bch.prev_blk_hash));
+	sha256_update(&ctx, (const BYTE *) &bch, sizeof(bch));
 	sha256_final(&ctx, buf);
 /*	pass = pass && !memcmp(hash2, buf, SHA256_BLOCK_SIZE); */
+	printf("Block Size = %d\n", sizeof(bch));
+	printf("First hash = 0x");
+	printf_array_hex(buf, sizeof(buf));
 
 /* first hash did something */
 /* Hash = 0x85c61645ab8939021923e650099648eb3871184855715d094611c65687772678 */
@@ -114,9 +140,6 @@ uint32_t Nonce;
 	sha256_init(&ctx);
 	sha256_update(&ctx, buf, SHA256_BLOCK_SIZE);
 	sha256_final(&ctx, buf1);
-
-	printf("First hash = 0x");
-	printf_array_hex(buf, sizeof(buf));
 
 	printf("Second hash = 0x");
 	printf_array_hex(buf1, SHA256_BLOCK_SIZE);
