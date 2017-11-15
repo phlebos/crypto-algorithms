@@ -34,10 +34,8 @@ int hex2data(unsigned char *data, const unsigned char *hexstring, unsigned int l
     limit = len/2;
 	if (direction == 0) /* forwards */ 
 	{
-	printf("going backwards len = %d \n",len);
 	    for(count = 0; count < limit; count++) {
 	        char buf[5] = {'0', 'x', pos[0], pos[1], 0};
-		printf("Count %d Store at %d \n",count, count); 
 	        data[count] = strtol(buf, &endptr, 0);
 	        pos += 2 * sizeof(char);
 	
@@ -49,10 +47,8 @@ int hex2data(unsigned char *data, const unsigned char *hexstring, unsigned int l
 	}
 	else /* backwards */
 	{
-	printf("going backwards len = %d \n",len);	    
 	     for(count = 0; count < limit; count++) {
 	        char buf[5] = {'0', 'x', pos[0], pos[1], 0};
-		printf("Count %d Store at %d \n",count, (limit - (count+1))); 
 	        data[(limit) - (count+1)] = strtol(buf, &endptr, 0);
 	        pos += 2 * sizeof(char);
 	
@@ -68,7 +64,7 @@ int hex2data(unsigned char *data, const unsigned char *hexstring, unsigned int l
  
 struct bc_header bch;
 
-int printf_array_hex(uint8_t *array, int len)
+int printf_array_hex(uint8_t *array, int len, int direction)
 {
 	uint8_t * pos;
 	uint8_t * end;	
@@ -79,6 +75,7 @@ int printf_array_hex(uint8_t *array, int len)
 	{
    		printf("%02x", *pos);
 	}
+
 printf("\n");
 
 }
