@@ -68,13 +68,23 @@ int printf_array_hex(uint8_t *array, int len, int direction)
 {
 	uint8_t * pos;
 	uint8_t * end;	
-	pos = array;
-	end = pos + len;
-
-	for ( ; pos != end; ++pos )
+	if (direction == 0) /* forwards */ 
 	{
-   		printf("%02x", *pos);
+		pos = array;
+		end = pos + len;
+		for ( ; pos != end; ++pos )
+		{
+   			printf("%02x", *pos);
+		}
 	}
+	else /* backwards */
+	{
+		pos = array+(len -1);
+		for ( ; pos >= array; --pos )
+		{
+   			printf("%02x", *pos);
+		}
+	}			
 
 printf("\n");
 
@@ -100,11 +110,11 @@ bch.nNonce=856192328;
 printf("Ver = %u \n", bch.nVer);
 printf("nTime = 0x%x \n", bch.nTime);
 printf("nBits = 0x%x \n", bch.nBits);
-printf("nNonce = %d \n", bch.nNonce);
+printf("nNonce = 0x%x %d  \n", bch.nNonce, bch.nNonce);
 printf("prev_blk_hash = 0x");
-printf_array_hex(bch.prev_blk_hash, sizeof(bch.prev_blk_hash));
+printf_array_hex(bch.prev_blk_hash, sizeof(bch.prev_blk_hash),1);
 printf("merkle_root_hash = 0x");
-printf_array_hex(bch.merkle_root_hash, sizeof(bch.merkle_root_hash));
+printf_array_hex(bch.merkle_root_hash, sizeof(bch.merkle_root_hash),1);
 
 /* Now do some work */
 
@@ -118,8 +128,9 @@ uint32_t Nonce;
 	BYTE buf1[SHA256_BLOCK_SIZE];
 
 /* first hash */
-
-	printf_array_hex((uint8_t *)&bch, sizeof(bch));
+	printf("Raw block Header\n");
+	printf_array_hex((uint8_t *)&bch, sizeof(bch),0);
+	printf("\n");
 
 	sha256_init(&ctx);
 	sha256_update(&ctx, (const BYTE *) &bch, sizeof(bch));
@@ -127,7 +138,7 @@ uint32_t Nonce;
 /*	pass = pass && !memcmp(hash2, buf, SHA256_BLOCK_SIZE); */
 	printf("Block Size = %d\n", sizeof(bch));
 	printf("First hash = 0x");
-	printf_array_hex(buf, sizeof(buf));
+	printf_array_hex(buf, sizeof(buf),1);
 
 /* first hash did something */
 /* Hash = 0x85c61645ab8939021923e650099648eb3871184855715d094611c65687772678 */
@@ -139,7 +150,7 @@ uint32_t Nonce;
 	sha256_final(&ctx, buf1);
 
 	printf("Second hash = 0x");
-	printf_array_hex(buf1, SHA256_BLOCK_SIZE);
+	printf_array_hex(buf1, SHA256_BLOCK_SIZE,1);
 /*
 	sha256_init(&ctx);
 	for (idx = 0; idx < 100000; ++idx)
