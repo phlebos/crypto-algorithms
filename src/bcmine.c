@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <gmp.h>
+#include <time.h>
 #include "sha256.h"
 
 struct bc_header {
@@ -105,9 +106,10 @@ hex2data(bch.prev_blk_hash , p_blk_hash, strlen(p_blk_hash),1);
 hex2data(bch.merkle_root_hash , mkl_root_hash, strlen(mkl_root_hash),1);
 bch.nTime=0x53058b35;
 bch.nBits=0x19015f53;
-/* bch.nNonce=0; */
-/* bch.nNonce=856192328; */ /*correct nonce */
 bch.nNonce=0;
+/* bch.nNonce=856192328; */ /*correct nonce */
+/*            475000000 */ 
+/*bch.nNonce=(856192328 - 1000); */
 /* print out for check */
 printf("Ver   = %u \n", bch.nVer);
 printf("nTime = 0x%x \n", bch.nTime);
@@ -145,17 +147,27 @@ Function: void mpz_mul_2exp (mpz_t rop, const mpz_t op1, mp_bitcnt_t op2)
 SHA256_CTX ctx;
 
 uint32_t Nonce;
-
+	int res;
 	int idx;
 	int pass = 1;
 	BYTE hash1[SHA256_BLOCK_SIZE];
 	BYTE hash2[SHA256_BLOCK_SIZE];
-
+	
 /* first hash */
 	/* printf("Raw block Header\n"); */
 	/*printf_array_hex((uint8_t *)&bch, sizeof(bch),0); */
 	/*printf("\n"); */
+int loop_count = 0;
+clock_t start,end;
+double cpu_time_used;
 
+/* was in loop memory leak? */
+	mpz_t zhash;
+	mpz_init (zhash);
+
+start = clock();
+while (!(res > 0))
+	{
 	sha256_init(&ctx);
 	sha256_update(&ctx, (const BYTE *) &bch, sizeof(bch));
 	sha256_final(&ctx, hash1);
@@ -171,18 +183,30 @@ uint32_t Nonce;
 
 	/*printf("Second hash = 0x");*/
 	/*printf_array_hex(hash2, SHA256_BLOCK_SIZE,1);*/
-	mpz_t zhash;
-	mpz_init (zhash);
+
 /*Function: void mpz_import (mpz_t rop, size_t count, int order, size_t size, int endian, size_t nails, const void *op) */
 	mpz_import (zhash, 32, -1, 1, 0, 0, hash2);
 
 /*	gmp_printf ("Target           = 0x%064Zx\n", target); */
-	gmp_printf ("Hash             = 0x%064Zx\n", zhash);
+/*	gmp_printf ("Hash             = 0x%064Zx\n", zhash); */
 	
-	int res;
 	res = mpz_cmp (target, zhash);
+/*	printf("%d, ",bch.nNonce); */
+/*	gmp_printf ("0x%064Zx\n", zhash); */
+	bch.nNonce = bch.nNonce + 1;
 /*Compare op1 and op2. Return a positive value if op1 > op2, zero if op1 = op2, or a negative value if op1 < op2. */
-	if (res > 0) {printf("Success\n");} else {printf("Fail\n");}
+/*	if (res > 0) {printf("Success\n");} else {printf("Fail\n");} */
+	if(++loop_count == 1000000) {
+		end=clock();
+		loop_count=0;
+		cpu_time_used = ((double) (end - start))/CLOCKS_PER_SEC;
+		printf("End = %d Start= %d Clocks = %d\n",end,start, (end - start));
+		printf("CPU secs per Mega hash = %f Mega hash per sec = %f\n",cpu_time_used, (1/cpu_time_used));
+		printf("%d, ",bch.nNonce); 
+		gmp_printf ("0x%064Zx\n", zhash); 
+		start=clock();
+	}
+	}
 
  
 }
