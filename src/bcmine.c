@@ -118,8 +118,6 @@ printf_array_hex(bch.prev_blk_hash, sizeof(bch.prev_blk_hash),1);
 printf("merkle_root_hash = 0x");
 printf_array_hex(bch.merkle_root_hash, sizeof(bch.merkle_root_hash),1);
 
-/* printf("Target = %x\n" , (0x0404cb * 2**(8*(0x1b - 3)))); */
-
 /* Now do some work */
 /* gmp multiple precision integer */
 mpz_t target,zmant;
@@ -136,7 +134,7 @@ lshift = (8*(exp - 3));
 mpz_mul_2exp (target, zmant, lshift);
 
 gmp_printf ("Target           = 0x%064Zx\n", target);
-gmp_printf ("Target = %Zd\n", target);
+/* gmp_printf ("Target = %Zd\n", target); */
 /*
 target_hexstr = '%064x' % (mant * (1<<(8*(exp - 3))))
 mant * 2**(8*(exp - 3))
@@ -150,8 +148,8 @@ uint32_t Nonce;
 
 	int idx;
 	int pass = 1;
-	BYTE buf[SHA256_BLOCK_SIZE];
-	BYTE buf1[SHA256_BLOCK_SIZE];
+	BYTE hash1[SHA256_BLOCK_SIZE];
+	BYTE hash2[SHA256_BLOCK_SIZE];
 
 /* first hash */
 	/* printf("Raw block Header\n"); */
@@ -160,20 +158,33 @@ uint32_t Nonce;
 
 	sha256_init(&ctx);
 	sha256_update(&ctx, (const BYTE *) &bch, sizeof(bch));
-	sha256_final(&ctx, buf);
+	sha256_final(&ctx, hash1);
 	/*printf("Block Size = %d\n", sizeof(bch));*/
 	/*printf("First hash = 0x");*/
-	/*printf_array_hex(buf, sizeof(buf),1);*/
+	/*printf_array_hex(hash1, sizeof(buf),1);*/
 
 /* second hash */
 
 	sha256_init(&ctx);
-	sha256_update(&ctx, buf, SHA256_BLOCK_SIZE);
-	sha256_final(&ctx, buf1);
+	sha256_update(&ctx, hash1, SHA256_BLOCK_SIZE);
+	sha256_final(&ctx, hash2);
 
 	/*printf("Second hash = 0x");*/
-	/*printf_array_hex(buf1, SHA256_BLOCK_SIZE,1);*/
+	/*printf_array_hex(hash2, SHA256_BLOCK_SIZE,1);*/
+	mpz_t zhash;
+	mpz_init (zhash);
+/*Function: void mpz_import (mpz_t rop, size_t count, int order, size_t size, int endian, size_t nails, const void *op) */
+	mpz_import (zhash, 32, -1, 1, 0, 0, hash2);
 
+/*	gmp_printf ("Target           = 0x%064Zx\n", target); */
+	gmp_printf ("Hash             = 0x%064Zx\n", zhash);
+	
+	int res;
+	res = mpz_cmp (target, zhash);
+/*Compare op1 and op2. Return a positive value if op1 > op2, zero if op1 = op2, or a negative value if op1 < op2. */
+	if (res > 0) {printf("Success\n");} else {printf("Fail\n");}
+
+ 
 }
 
  
