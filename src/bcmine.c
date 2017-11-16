@@ -4,6 +4,7 @@
 #include <memory.h>
 #include <string.h>
 #include <stdint.h>
+#include <gmp.h>
 #include "sha256.h"
 
 struct bc_header {
@@ -108,17 +109,41 @@ bch.nBits=0x19015f53;
 /* bch.nNonce=856192328; */ /*correct nonce */
 bch.nNonce=0;
 /* print out for check */
-printf("Ver = %u \n", bch.nVer);
+printf("Ver   = %u \n", bch.nVer);
 printf("nTime = 0x%x \n", bch.nTime);
 printf("nBits = 0x%x \n", bch.nBits);
-printf("starting nNonce = 0x%x %d  \n", bch.nNonce, bch.nNonce);
-printf("prev_blk_hash = 0x");
+printf("starting nNonce  = 0x%x %d  \n", bch.nNonce, bch.nNonce);
+printf("prev_blk_hash    = 0x");
 printf_array_hex(bch.prev_blk_hash, sizeof(bch.prev_blk_hash),1);
 printf("merkle_root_hash = 0x");
 printf_array_hex(bch.merkle_root_hash, sizeof(bch.merkle_root_hash),1);
 
-/* Now do some work */
+/* printf("Target = %x\n" , (0x0404cb * 2**(8*(0x1b - 3)))); */
 
+/* Now do some work */
+/* gmp multiple precision integer */
+mpz_t target,zmant;
+mpz_init (target);
+mpz_init (zmant);
+mp_bitcnt_t lshift;
+/* Calculate target */
+uint32_t exp, mant;
+exp = bch.nBits >> 24;
+mant = bch.nBits & 0x00ffffff;
+
+mpz_set_ui (zmant, mant);
+lshift = (8*(exp - 3));
+mpz_mul_2exp (target, zmant, lshift);
+
+gmp_printf ("Target           = 0x%064Zx\n", target);
+gmp_printf ("Target = %Zd\n", target);
+/*
+target_hexstr = '%064x' % (mant * (1<<(8*(exp - 3))))
+mant * 2**(8*(exp - 3))
+Function: void mpz_mul_2exp (mpz_t rop, const mpz_t op1, mp_bitcnt_t op2)
+
+    Set rop to op1 times 2 raised to op2. This operation can also be defined as a left shift by op2 bits. 
+*/
 SHA256_CTX ctx;
 
 uint32_t Nonce;
@@ -129,16 +154,16 @@ uint32_t Nonce;
 	BYTE buf1[SHA256_BLOCK_SIZE];
 
 /* first hash */
-	printf("Raw block Header\n");
-	printf_array_hex((uint8_t *)&bch, sizeof(bch),0);
-	printf("\n");
+	/* printf("Raw block Header\n"); */
+	/*printf_array_hex((uint8_t *)&bch, sizeof(bch),0); */
+	/*printf("\n"); */
 
 	sha256_init(&ctx);
 	sha256_update(&ctx, (const BYTE *) &bch, sizeof(bch));
 	sha256_final(&ctx, buf);
-	printf("Block Size = %d\n", sizeof(bch));
-	printf("First hash = 0x");
-	printf_array_hex(buf, sizeof(buf),1);
+	/*printf("Block Size = %d\n", sizeof(bch));*/
+	/*printf("First hash = 0x");*/
+	/*printf_array_hex(buf, sizeof(buf),1);*/
 
 /* second hash */
 
@@ -146,36 +171,10 @@ uint32_t Nonce;
 	sha256_update(&ctx, buf, SHA256_BLOCK_SIZE);
 	sha256_final(&ctx, buf1);
 
-	printf("Second hash = 0x");
-	printf_array_hex(buf1, SHA256_BLOCK_SIZE,1);
+	/*printf("Second hash = 0x");*/
+	/*printf_array_hex(buf1, SHA256_BLOCK_SIZE,1);*/
 
 }
 
  
-/*
-
-ver = 2
-prev_block = "000000000000000117c80378b8da0e33559b5997f2ad55e2f7d18ec1975b9717"
-mrkl_root = "871714dcbae6c8193a2bb9b2a69fe1c0440399f38d94b3a0f1b447275a29978a"
-time_ = 0x53058b35 # 2014-02-20 04:57:25
-bits = 0x19015f53
- 
-# https://en.bitcoin.it/wiki/Difficulty
-exp = bits >> 24
-mant = bits & 0xffffff
-target_hexstr = '%064x' % (mant * (1<<(8*(exp - 3))))
-target_str = target_hexstr.decode('hex')
- 
-nonce = 0
-while nonce < 0x100000000:
-    header = ( struct.pack("<L", ver) + prev_block.decode('hex')[::-1] +
-          mrkl_root.decode('hex')[::-1] + struct.pack("<LLL", time_, bits, nonce))
-    hash = hashlib.sha256(hashlib.sha256(header).digest()).digest()
-    print nonce, hash[::-1].encode('hex')
-    if hash[::-1] < target_str:
-        print 'success'
-        break
-    nonce += 1
-view rawmine.py hosted with ❤ by GitHub
-*/
 

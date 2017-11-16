@@ -12,7 +12,11 @@ AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 # Enable "automake" to simplify creating makefiles:
 AM_INIT_AUTOMAKE([foreign subdir-objects -Wall -Werror])
+# Check for GNU GMP lib
+AC_CHECK_LIB(gmp, __gmpz_init, ,
+  [AC_MSG_ERROR([GNU MP not found, see https://gmplib.org/])])
 AC_CONFIG_FILES(Makefile)
+LT_INIT
 # Look for a C compiler:
 AC_PROG_CC
 AM_PROG_CC_C_O
