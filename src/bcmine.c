@@ -105,12 +105,13 @@ hex2data(bch.merkle_root_hash , mkl_root_hash, strlen(mkl_root_hash),1);
 bch.nTime=0x53058b35;
 bch.nBits=0x19015f53;
 /* bch.nNonce=0; */
-bch.nNonce=856192328;
+/* bch.nNonce=856192328; */ /*correct nonce */
+bch.nNonce=0;
 /* print out for check */
 printf("Ver = %u \n", bch.nVer);
 printf("nTime = 0x%x \n", bch.nTime);
 printf("nBits = 0x%x \n", bch.nBits);
-printf("nNonce = 0x%x %d  \n", bch.nNonce, bch.nNonce);
+printf("starting nNonce = 0x%x %d  \n", bch.nNonce, bch.nNonce);
 printf("prev_blk_hash = 0x");
 printf_array_hex(bch.prev_blk_hash, sizeof(bch.prev_blk_hash),1);
 printf("merkle_root_hash = 0x");
@@ -135,13 +136,9 @@ uint32_t Nonce;
 	sha256_init(&ctx);
 	sha256_update(&ctx, (const BYTE *) &bch, sizeof(bch));
 	sha256_final(&ctx, buf);
-/*	pass = pass && !memcmp(hash2, buf, SHA256_BLOCK_SIZE); */
 	printf("Block Size = %d\n", sizeof(bch));
 	printf("First hash = 0x");
 	printf_array_hex(buf, sizeof(buf),1);
-
-/* first hash did something */
-/* Hash = 0x85c61645ab8939021923e650099648eb3871184855715d094611c65687772678 */
 
 /* second hash */
 
@@ -151,15 +148,7 @@ uint32_t Nonce;
 
 	printf("Second hash = 0x");
 	printf_array_hex(buf1, SHA256_BLOCK_SIZE,1);
-/*
-	sha256_init(&ctx);
-	for (idx = 0; idx < 100000; ++idx)
-	   sha256_update(&ctx, text3, strlen(text3));
-	sha256_final(&ctx, buf);
-	pass = pass && !memcmp(hash3, buf, SHA256_BLOCK_SIZE);
 
-	return(pass);
-*/
 }
 
  
