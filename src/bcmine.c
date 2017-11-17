@@ -106,9 +106,10 @@ hex2data(bch.prev_blk_hash , p_blk_hash, strlen(p_blk_hash),1);
 hex2data(bch.merkle_root_hash , mkl_root_hash, strlen(mkl_root_hash),1);
 bch.nTime=0x53058b35;
 bch.nBits=0x19015f53;
-bch.nNonce=0;
-/* bch.nNonce=856192328; */ /*correct nonce */
+/*bch.nNonce=0;*/
+bch.nNonce=856192328;   /*correct nonce */
 /*            475000000 */ 
+/*bch.nNonce=(856192328 - 1000001); */ 
 /*bch.nNonce=(856192328 - 1000); */
 /* print out for check */
 printf("Ver   = %u \n", bch.nVer);
@@ -144,9 +145,8 @@ Function: void mpz_mul_2exp (mpz_t rop, const mpz_t op1, mp_bitcnt_t op2)
 
     Set rop to op1 times 2 raised to op2. This operation can also be defined as a left shift by op2 bits. 
 */
-SHA256_CTX ctx;
+SHA256_CTX ctx1,ctx2,ctx3;
 
-uint32_t Nonce;
 	int res;
 	int idx;
 	int pass = 1;
@@ -161,25 +161,32 @@ int loop_count = 0;
 clock_t start,end;
 double cpu_time_used;
 
-/* was in loop memory leak? */
 	mpz_t zhash;
 	mpz_init (zhash);
 
+	sha256_init(&ctx1);
+	sha256_first(&ctx1, (const BYTE *) &bch);
+	ctx2 = ctx1;	
+
 start = clock();
-while (!(res > 0))
+ 	while (!(res > 0))
 	{
-	sha256_init(&ctx);
-	sha256_update(&ctx, (const BYTE *) &bch, sizeof(bch));
-	sha256_final(&ctx, hash1);
+/*	sha256_init(&ctx1); 
+	sha256_update(&ctx1, (const BYTE *) &bch, sizeof(bch)); 
+	sha256_final(&ctx1, hash1); */ 
+/* printf("and this far\n"); */ 
+	sha256_second(&ctx2, hash1, (const BYTE *) &bch);
+	ctx2 = ctx1; 
+/* printf("this far? loop = %d\n",loop_count); */ 
 	/*printf("Block Size = %d\n", sizeof(bch));*/
 	/*printf("First hash = 0x");*/
 	/*printf_array_hex(hash1, sizeof(buf),1);*/
 
 /* second hash */
 
-	sha256_init(&ctx);
-	sha256_update(&ctx, hash1, SHA256_BLOCK_SIZE);
-	sha256_final(&ctx, hash2);
+	sha256_init(&ctx3);
+	sha256_update(&ctx3, hash1, SHA256_BLOCK_SIZE);
+	sha256_final(&ctx3, hash2);
 
 	/*printf("Second hash = 0x");*/
 	/*printf_array_hex(hash2, SHA256_BLOCK_SIZE,1);*/
@@ -208,7 +215,7 @@ while (!(res > 0))
 	}
 	}
 
- 
+ 	gmp_printf ("Hash             = 0x%064Zx\n", zhash);
 }
 
  

@@ -131,12 +131,14 @@ void sha256_first(SHA256_CTX *ctx, const BYTE data[])
 void sha256_second(SHA256_CTX *ctx, BYTE hash[], const BYTE data[])
 {
 	WORD i;
+	ctx->datalen = 0;
 /* need to copy data from data[64] onwards */
-	for (i = 64; i < 81; ++i) { /* last 16 bytes */
+	for (i = 64; i < 80; ++i) { /* last 16 bytes */
 		ctx->data[ctx->datalen] = data[i];
 		ctx->datalen++;
 		}	
-	i = ctx->datalen;
+
+	i = ctx->datalen; 
 
 	// Pad whatever data is left in the buffer.
 	if (ctx->datalen < 56) {

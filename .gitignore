@@ -2,6 +2,7 @@
 sha256_test
 hello
 bcmine
+timelog.txt
 # ignore objects and archives, anywhere in the tree.
 *.[oa]
 /build-aux
