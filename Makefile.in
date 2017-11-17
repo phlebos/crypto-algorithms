@@ -78,7 +78,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = sha256_test$(EXEEXT) bcmine$(EXEEXT) hello$(EXEEXT)
+bin_PROGRAMS = sha256_test$(EXEEXT) bcmine$(EXEEXT) \
+	generate_first_hash$(EXEEXT) hello$(EXEEXT)
 subdir = .
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/configure $(am__configure_deps) \
@@ -114,6 +115,10 @@ AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+am_generate_first_hash_OBJECTS = src/generate_first_hash.$(OBJEXT) \
+	src/sha256.$(OBJEXT)
+generate_first_hash_OBJECTS = $(am_generate_first_hash_OBJECTS)
+generate_first_hash_LDADD = $(LDADD)
 am_hello_OBJECTS = src/hello.$(OBJEXT)
 hello_OBJECTS = $(am_hello_OBJECTS)
 hello_LDADD = $(LDADD)
@@ -155,9 +160,10 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(bcmine_SOURCES) $(hello_SOURCES) $(sha256_test_SOURCES)
-DIST_SOURCES = $(bcmine_SOURCES) $(hello_SOURCES) \
-	$(sha256_test_SOURCES)
+SOURCES = $(bcmine_SOURCES) $(generate_first_hash_SOURCES) \
+	$(hello_SOURCES) $(sha256_test_SOURCES)
+DIST_SOURCES = $(bcmine_SOURCES) $(generate_first_hash_SOURCES) \
+	$(hello_SOURCES) $(sha256_test_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -319,6 +325,7 @@ top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4 --install
 sha256_test_SOURCES = src/sha256_test.c src/sha256.c src/sha256.h
 bcmine_SOURCES = src/bcmine.c src/sha256.c src/sha256.h 
+generate_first_hash_SOURCES = src/generate_first_hash.c src/sha256.c src/sha256.h 
 #bcmine_LDADD=libgmp.la
 hello_SOURCES = src/hello.c
 EXTRA_DIST = m4/notes
@@ -439,6 +446,12 @@ src/sha256.$(OBJEXT): src/$(am__dirstamp) \
 bcmine$(EXEEXT): $(bcmine_OBJECTS) $(bcmine_DEPENDENCIES) $(EXTRA_bcmine_DEPENDENCIES) 
 	@rm -f bcmine$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(bcmine_OBJECTS) $(bcmine_LDADD) $(LIBS)
+src/generate_first_hash.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+
+generate_first_hash$(EXEEXT): $(generate_first_hash_OBJECTS) $(generate_first_hash_DEPENDENCIES) $(EXTRA_generate_first_hash_DEPENDENCIES) 
+	@rm -f generate_first_hash$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(generate_first_hash_OBJECTS) $(generate_first_hash_LDADD) $(LIBS)
 src/hello.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 
 hello$(EXEEXT): $(hello_OBJECTS) $(hello_DEPENDENCIES) $(EXTRA_hello_DEPENDENCIES) 
@@ -459,6 +472,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/bcmine.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/generate_first_hash.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/hello.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/sha256.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/sha256_test.Po@am__quote@
