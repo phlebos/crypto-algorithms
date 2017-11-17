@@ -174,13 +174,8 @@ start = clock();
 /*	sha256_init(&ctx1); 
 	sha256_update(&ctx1, (const BYTE *) &bch, sizeof(bch)); 
 	sha256_final(&ctx1, hash1); */ 
-/* printf("and this far\n"); */ 
 	sha256_second(&ctx2, hash1, (const BYTE *) &bch);
 	ctx2 = ctx1; 
-/* printf("this far? loop = %d\n",loop_count); */ 
-	/*printf("Block Size = %d\n", sizeof(bch));*/
-	/*printf("First hash = 0x");*/
-	/*printf_array_hex(hash1, sizeof(buf),1);*/
 
 /* second hash */
 
@@ -188,18 +183,11 @@ start = clock();
 	sha256_update(&ctx3, hash1, SHA256_BLOCK_SIZE);
 	sha256_final(&ctx3, hash2);
 
-	/*printf("Second hash = 0x");*/
-	/*printf_array_hex(hash2, SHA256_BLOCK_SIZE,1);*/
-
 /*Function: void mpz_import (mpz_t rop, size_t count, int order, size_t size, int endian, size_t nails, const void *op) */
 	mpz_import (zhash, 32, -1, 1, 0, 0, hash2);
 
-/*	gmp_printf ("Target           = 0x%064Zx\n", target); */
-/*	gmp_printf ("Hash             = 0x%064Zx\n", zhash); */
-	
 	res = mpz_cmp (target, zhash);
-/*	printf("%d, ",bch.nNonce); */
-/*	gmp_printf ("0x%064Zx\n", zhash); */
+
 	bch.nNonce = bch.nNonce + 1;
 /*Compare op1 and op2. Return a positive value if op1 > op2, zero if op1 = op2, or a negative value if op1 < op2. */
 /*	if (res > 0) {printf("Success\n");} else {printf("Fail\n");} */
