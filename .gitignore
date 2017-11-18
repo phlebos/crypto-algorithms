@@ -5,6 +5,8 @@ bcmine
 final_hash_256
 generate_first_hash
 
+analysis.txt
+
 
 timelog.txt
 # ignore objects and archives, anywhere in the tree.

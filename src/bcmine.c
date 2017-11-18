@@ -1,6 +1,7 @@
 /* BCMine.c */ 
 #include "config.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <memory.h>
 #include <string.h>
 #include <stdint.h>
@@ -106,10 +107,10 @@ hex2data(bch.prev_blk_hash , p_blk_hash, strlen(p_blk_hash),1);
 hex2data(bch.merkle_root_hash , mkl_root_hash, strlen(mkl_root_hash),1);
 bch.nTime=0x53058b35;
 bch.nBits=0x19015f53;
-/*bch.nNonce=0;*/
-bch.nNonce=856192328;   /*correct nonce */
+bch.nNonce=0;
+/*bch.nNonce=856192328;*/   /*correct nonce */
 /*            475000000 */ 
-/*bch.nNonce=(856192328 - 1000001); */ 
+/*bch.nNonce=(856192328 - 1000001);*/
 /*bch.nNonce=(856192328 - 1000); */
 /* print out for check */
 printf("Ver   = %u \n", bch.nVer);

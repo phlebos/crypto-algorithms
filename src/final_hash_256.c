@@ -1,12 +1,19 @@
 /* BCMine.c */ 
 #include "config.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <memory.h>
 #include <string.h>
 #include <stdint.h>
 #include <gmp.h>
 #include <time.h>
 #include "sha256.h"
+
+typedef struct {
+	WORD datalen;
+	unsigned long long bitlen;
+	WORD state[8];
+} SHA256_CTX_STAT;
 
 //convert hexstring to len bytes of data
 //returns 0 on success, -1 on error
@@ -81,6 +88,12 @@ printf("\n");
 
 }
 
+int printf_ctx_stat(SHA256_CTX *ctx)
+{
+	printf("CTX datalen = %d , 0x%x\n", ctx->datalen,ctx->datalen);
+	printf("CTX bitlen  = %d , 0x%x\n", ctx->bitlen,ctx->bitlen);
+}
+
 
 int main()
 {
@@ -103,6 +116,7 @@ char p_first_hash[]="7c122b86287a3ef7eac247e0ad637091ccfecbf85f6213030d9c1f89551
 
 	sha256_init(&ctx1); 
 	sha256_update(&ctx1, hash1, SHA256_BLOCK_SIZE); 
+	printf_ctx_stat(&ctx1);
 	sha256_final(&ctx1, hash2);  
 
 	mpz_import (zhash, 32, -1, 1, 0, 0, hash2);

@@ -90,7 +90,7 @@ EGREP="/bin/grep -E"
 FGREP="/bin/grep -F"
 
 # A BSD- or MS-compatible name lister.
-NM="/bin/nm -B"
+NM="/opt/rh/devtoolset-7/root/usr/bin/nm -B"
 
 # Whether we need soft or hard links.
 LN_S="ln -s"
@@ -272,10 +272,10 @@ finish_eval=""
 hardcode_into_libs=yes
 
 # Compile-time system search path for libraries.
-sys_lib_search_path_spec="/usr/lib/gcc/x86_64-redhat-linux/4.8.5 /usr/lib64 /lib64 "
+sys_lib_search_path_spec="/opt/rh/devtoolset-7/root/usr/lib/gcc/x86_64-redhat-linux/7 /opt/rh/devtoolset-7/root/usr/lib64 /lib64 /usr/lib64 "
 
 # Run-time system search path for libraries.
-sys_lib_dlsearch_path_spec="/lib64 /usr/lib64 /lib /usr/lib /usr/lib64/dyninst /usr/lib64/iscsi /usr/lib64/mysql /usr/lib64/nvidia /usr/lib64/vdpau /usr/lib/nvidia /usr/lib/vdpau /usr/lib64/qt-3.3/lib /usr/lib64/tcl8.5 /usr/lib64/wine/ "
+sys_lib_dlsearch_path_spec="/lib64 /usr/lib64 /lib /usr/lib /opt/rh/devtoolset-7/root/usr/lib64/dyninst /usr/lib64/dyninst /usr/lib64/iscsi /usr/lib64/mysql /usr/lib64/nvidia /usr/lib64/vdpau /usr/lib/nvidia /usr/lib/vdpau /usr/lib64/qt-3.3/lib /usr/lib64/tcl8.5 /usr/lib64/wine/ "
 
 # Whether dlopen is supported.
 dlopen_support=unknown
@@ -292,7 +292,7 @@ striplib="strip --strip-unneeded"
 
 
 # The linker used to build libraries.
-LD="/bin/ld -m elf_x86_64"
+LD="/opt/rh/devtoolset-7/root/usr/libexec/gcc/x86_64-redhat-linux/7/ld -m elf_x86_64"
 
 # How to create reloadable object files.
 reload_flag=" -r"
