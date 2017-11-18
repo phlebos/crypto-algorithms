@@ -117,11 +117,14 @@ char p_first_hash[]="7c122b86287a3ef7eac247e0ad637091ccfecbf85f6213030d9c1f89551
 	sha256_init(&ctx1); 
 	sha256_update(&ctx1, hash1, SHA256_BLOCK_SIZE); 
 	printf_ctx_stat(&ctx1);
-	sha256_final(&ctx1, hash2);  
+	sha256_pad(&ctx1);
+	printf_ctx_stat(&ctx1);
+	printf_array_hex(ctx1.data, 64, 0);
+/*	sha256_final(&ctx1, hash2); */ 
 
-	mpz_import (zhash, 32, -1, 1, 0, 0, hash2);
+/*	mpz_import (zhash, 32, -1, 1, 0, 0, hash2);
 
-        gmp_printf ("Hash             = 0x%064Zx\n", zhash);
+        gmp_printf ("Hash             = 0x%064Zx\n", zhash); */
 }
 
  

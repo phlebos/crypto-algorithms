@@ -180,6 +180,27 @@ void sha256_second(SHA256_CTX *ctx, BYTE hash[], const BYTE data[])
 	}
 }
 
+void sha256_pad(SHA256_CTX *ctx)
+{
+	WORD i;
+
+	i = ctx->datalen;
+
+	// Pad whatever data is left in the buffer.
+	if (ctx->datalen < 56) {
+		ctx->data[i++] = 0x80;
+		while (i < 56)
+			ctx->data[i++] = 0x00;
+	}
+	else {
+		ctx->data[i++] = 0x80;
+		while (i < 64)
+			ctx->data[i++] = 0x00;
+		sha256_transform(ctx, ctx->data);
+		memset(ctx->data, 0, 56);
+	}
+}
+
 void sha256_final(SHA256_CTX *ctx, BYTE hash[])
 {
 	WORD i;
