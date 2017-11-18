@@ -1,4 +1,4 @@
-/* BCMine.c */ 
+/* final_hash_256.c */ 
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
