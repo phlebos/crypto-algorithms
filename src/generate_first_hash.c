@@ -184,7 +184,9 @@ double cpu_time_used;
 	sha256_update(&ctx1, (const BYTE *) &bch, sizeof(bch)); 
 	sha256_final(&ctx1, hash1); */ 
 	sha256_second(&ctx2, hash1, (const BYTE *) &bch);
-	ctx2 = ctx1; 
+	ctx2 = ctx1;
+	printf("Raw Hash1        = ");
+	printf_array_hex(hash1, SHA256_BLOCK_SIZE, 0); 
 	mpz_import (zhash, 32, -1, 1, 0, 0, hash1);
 	gmp_printf ("Hash1            = 0x%064Zx\n", zhash);
 
