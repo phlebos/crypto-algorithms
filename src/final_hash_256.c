@@ -92,6 +92,8 @@ int printf_ctx_stat(SHA256_CTX *ctx)
 {
 	printf("CTX datalen = %d , 0x%x\n", ctx->datalen,ctx->datalen);
 	printf("CTX bitlen  = %d , 0x%x\n", ctx->bitlen,ctx->bitlen);
+    printf("S1 =0x%08x, S2 =0x%08x, S3 =0x%08x, S4 =0x%08x\n", ctx->state[0], ctx->state[1], ctx->state[2], ctx->state[3]);
+    printf("S5 =0x%08x, S6 =0x%08x, S7 =0x%08x, S8 =0x%08x\n", ctx->state[4], ctx->state[5], ctx->state[6], ctx->state[7]);
 }
 
 
@@ -119,12 +121,15 @@ char p_first_hash[]="7c122b86287a3ef7eac247e0ad637091ccfecbf85f6213030d9c1f89551
 	printf_ctx_stat(&ctx1);
 	sha256_pad(&ctx1);
 	printf_ctx_stat(&ctx1);
-	printf_array_hex(ctx1.data, 64, 0);
-/*	sha256_final(&ctx1, hash2); */ 
+    printf("padded message =0x");printf_array_hex(ctx1.data, 64, 0);
+    sha256_final(&ctx1, hash2);
+    printf("internal hash  =0x");printf_array_hex(hash2, SHA256_BLOCK_SIZE, 0);
 
-/*	mpz_import (zhash, 32, -1, 1, 0, 0, hash2);
+    printf_ctx_stat(&ctx1);
 
-        gmp_printf ("Hash             = 0x%064Zx\n", zhash); */
+
+    mpz_import (zhash, 32, -1, 1, 0, 0, hash2);
+        gmp_printf ("Reverse Hash   =0x%064Zx\n", zhash);
 }
 
  

@@ -7,6 +7,8 @@ generate_first_hash
 
 analysis.txt
 
+# QT-Creator files
+Makefile.am.user
 
 timelog.txt
 # ignore objects and archives, anywhere in the tree.

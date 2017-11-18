@@ -13,6 +13,7 @@
 *********************************************************************/
 
 /*************************** HEADER FILES ***************************/
+#include <stdio.h>
 #include <stdlib.h>
 #include <memory.h>
 #include "sha256.h"
@@ -209,6 +210,7 @@ void sha256_final(SHA256_CTX *ctx, BYTE hash[])
 
 	// Pad whatever data is left in the buffer.
 	if (ctx->datalen < 56) {
+//        printf("pad only");
 		ctx->data[i++] = 0x80;
 		while (i < 56)
 			ctx->data[i++] = 0x00;
