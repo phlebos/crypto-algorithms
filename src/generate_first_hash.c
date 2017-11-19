@@ -120,9 +120,8 @@ bch.nTime=0x53058b35;
 bch.nBits=0x19015f53;
 /*bch.nNonce=0;*/
 bch.nNonce=856192328;   /*correct nonce */
-/*            475000000 */ 
-/*bch.nNonce=(856192328 - 1000001); */ 
-/*bch.nNonce=(856192328 - 1000); */
+//bch.nNonce=(856192328 - 1000001);
+//bch.nNonce=(856192328 - 1000);
 /* print out for check */
 printf("Ver   = %u \n", bch.nVer);
 printf("nTime = 0x%x \n", bch.nTime);
@@ -181,9 +180,9 @@ double cpu_time_used;
 	ctx2 = ctx1;	
 
 	{
-/*	sha256_init(&ctx1); 
-	sha256_update(&ctx1, (const BYTE *) &bch, sizeof(bch)); 
-	sha256_final(&ctx1, hash1); */ 
+//    sha256_init(&ctx1);
+//	sha256_update(&ctx1, (const BYTE *) &bch, sizeof(bch));
+//	sha256_final(&ctx1, hash1);
 	sha256_second(&ctx2, hash1, (const BYTE *) &bch);
 	ctx2 = ctx1;
 	printf("Raw Hash1        = ");

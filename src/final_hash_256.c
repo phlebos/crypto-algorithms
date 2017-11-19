@@ -99,7 +99,7 @@ int printf_ctx_stat(SHA256_CTX *ctx)
 
 int main()
 {
-/* char p_first_hash[]="e6d91555891f9c0d0313625ff8cbfecc917063ade047c2eaf73e7a28862b127c"; */
+//char p_first_hash[]="e6d91555891f9c0d0313625ff8cbfecc917063ade047c2eaf73e7a28862b127c";
 char p_first_hash[]="7c122b86287a3ef7eac247e0ad637091ccfecbf85f6213030d9c1f895515d9e6";
 	BYTE hash1[SHA256_BLOCK_SIZE];
 	hex2data(hash1 , p_first_hash, strlen(p_first_hash),0);
@@ -112,9 +112,9 @@ char p_first_hash[]="7c122b86287a3ef7eac247e0ad637091ccfecbf85f6213030d9c1f89551
 
 	mpz_import (zhash, 32, -1, 1, 0, 0, hash1);
         gmp_printf ("Hashing          = 0x%064Zx\n", zhash);
-/*	sha256_init(&ctx1);
-	sha256_first(&ctx1, p_first_hash);
-	sha256_second(&ctx1, hash2, (const BYTE *) &bch);*/
+//	sha256_init(&ctx1);
+//	sha256_first(&ctx1, p_first_hash);
+//	sha256_second(&ctx1, hash2, (const BYTE *) &bch);
 
 	sha256_init(&ctx1); 
 	sha256_update(&ctx1, hash1, SHA256_BLOCK_SIZE); 
